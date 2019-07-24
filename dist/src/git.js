@@ -17,7 +17,6 @@ const BRANCH_HISTORY = "branch_history";
 class Git {
   constructor(dir = process.cwd()) {
     this.git = new SimpleGit(dir);
-    console.log("init success");
     this.storage = new _storage2.default("git");
   }
 
@@ -44,6 +43,7 @@ class Git {
         console.error("Current dir is not a git repository!!!");
         process.exit();
       });
+      console.log("is repo");
       _this2.branchHistories = _this2.storage.get(BRANCH_HISTORY) || {};
       _this2.name = yield _this2.getRepositoryName();
       if (!_this2.branchHistories[_this2.name]) {

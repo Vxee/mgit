@@ -9,6 +9,7 @@ const git = new Git();
 
 program.command("co <branch>").description("切换到某个分支，本地不存在时会尝试切换到远程分支").action((() => {
   var _ref = _asyncToGenerator(function* (branch) {
+    console.log(branch);
     try {
       yield git.checkout(branch, branch);
     } catch (e) {
@@ -20,3 +21,14 @@ program.command("co <branch>").description("切换到某个分支，本地不存
     return _ref.apply(this, arguments);
   };
 })());
+
+program.version("0.0.1");
+program.option("-n, --name <name>", "your name", "GK");
+
+program.command("hello").description("hello").action(() => {
+  console.log("test");
+});
+
+program.parse(process.argv);
+
+git.init().then(() => program.parse(process.argv));
