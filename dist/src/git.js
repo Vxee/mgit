@@ -43,7 +43,6 @@ class Git {
         console.error("Current dir is not a git repository!!!");
         process.exit();
       });
-      console.log("is repo");
       _this2.branchHistories = _this2.storage.get(BRANCH_HISTORY) || {};
       _this2.name = yield _this2.getRepositoryName();
       if (!_this2.branchHistories[_this2.name]) {
@@ -51,11 +50,12 @@ class Git {
         _this2.branchHistories[_this2.name] = [_this2.branchName];
         _this2.storage.set(BRANCH_HISTORY, _this2.branchHistories);
       }
-      console.log("git init");
+      console.log("git init success!");
     })();
   }
 
   pushBranchHistory(branchName) {
+    console.log(this.branchHistories, this.name);
     this.branchHistories[this.name].push(branchName);
     this.storage.set(BRANCH_HISTORY, this.branchHistories);
   }
@@ -195,8 +195,9 @@ class Git {
         _this11.git.checkout(options, function (msg, result) {
           msg && reject(msg);
           if (branchName) {
+            console.log("checkout: " + branchName);
             _this11.branchName = branchName;
-            _this11.pushBranchHistory(branchName);
+            // this.pushBranchHistory(branchName);
           }
           resolve(result);
         });
