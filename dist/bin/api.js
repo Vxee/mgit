@@ -57,6 +57,7 @@ program.command("opush").description("在远程创建分支，并推送本地分
     console.log(currentBranchName);
     git.raw(["push", "--set-upstream", "origin", currentBranchName], function (msg, result) {
       msg && reject(msg);
+      console.log(msg);
       resolve(result);
     });
   } catch (e) {
