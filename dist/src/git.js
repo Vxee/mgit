@@ -198,7 +198,7 @@ class Git {
           if (branchName) {
             console.log("checkout: " + branchName);
             _this11.branchName = branchName;
-            _this11.pushBranchHistory(branchName);
+            // this.pushBranchHistory(branchName);
           }
           resolve(result);
         });
@@ -307,6 +307,8 @@ class Git {
       });
     })();
   }
+
+  getCurrentBranchName() {}
 }
 
 module.exports = Git;

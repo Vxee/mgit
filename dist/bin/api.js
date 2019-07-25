@@ -49,7 +49,16 @@ program.command("update [branch]").description("更新最新的分支代码，�
 
 program.command("opush").description("在远程创建分支，并推送本地分支到远程").action(_asyncToGenerator(function* () {
   try {
-    yield git.push();
+    // await git.push('origin', '');
+    const currentBranchName = yield git.branch({}, function (msg, branchInfo) {
+      msg && reject(msg);
+      resolve(branchInfo.current);
+    });
+    console.log(currentBranchName);
+    git.raw(["push", "--set-upstream", "origin", currentBranchName], function (msg, result) {
+      msg && reject(msg);
+      resolve(result);
+    });
   } catch (e) {
     console.log(chalk.red(`分支推送失败`));
   }
