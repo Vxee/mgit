@@ -198,7 +198,7 @@ class Git {
           if (branchName) {
             console.log("checkout: " + branchName);
             _this11.branchName = branchName;
-            // this.pushBranchHistory(branchName);
+            _this11.pushBranchHistory(branchName);
           }
           resolve(result);
         });
