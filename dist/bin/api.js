@@ -17,14 +17,18 @@ program.command("co <branch>").description("切换到某个分支，本地不存
     try {
       yield git.checkout(branch, branch);
     } catch (e) {
-      git.fetch(branch).then(function () {
-        git.checkout(branch, branch).catch(function (e) {
-          console.log(e);
-          console.log(_warn(`无法切换到分支 ${branch}`));
-        });
-      }).catch(function () {
-        console.log(chalk.red(`分支 ${branch} 不存在`));
+      git.checkout("remotes/origin/" + branch, branch).catch(function (e) {
+        console.log(e);
+        console.log(_warn(`无法切换到分支 ${branch}`));
       });
+      // git
+      //   .fetch(branch)
+      //   .then(() => {
+
+      //   })
+      //   .catch(() => {
+      //     console.log(chalk.red(`分支 ${branch} 不存在`));
+      //   });
     }
   });
 
