@@ -47,6 +47,14 @@ program.command("update [branch]").description("更新最新的分支代码，�
   };
 })());
 
+program.command("opush").description("在远程创建分支，并推送本地分支到远程").action(_asyncToGenerator(function* () {
+  try {
+    yield git.push();
+  } catch (e) {
+    console.log(chalk.red(`分支推送失败`));
+  }
+}));
+
 program.parse(process.argv);
 
 git.init().then(() => program.parse(process.argv));
