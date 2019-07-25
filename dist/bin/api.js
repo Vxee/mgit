@@ -6,7 +6,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 const program = require("commander");
 const Git = require("../src/git");
 const chalk = require("chalk");
-const git = new Git("/Users/fujialing/work/guang-admin-node");
+const git = new Git();
 
 const _warn = chalk.keyword("orange");
 const _error = chalk.keyword("red");
@@ -34,12 +34,18 @@ program.command("co <branch>").description("切换到某个分支，本地不存
 })());
 
 program.version("0.0.1");
-program.option("-n, --name <name>", "your name", "GK");
 
-program.command("update").description("更新最新的master").action(_asyncToGenerator(function* () {
-  const branch = yield git.pull();
-  console.log(branch);
-}));
+program.command("update [branch]").description("更新最新的分支代码，默认是 master").action((() => {
+  var _ref2 = _asyncToGenerator(function* (targetBranch = "master") {
+    console.log(targetBranch);
+    const branch = yield git.pull(targetBranch);
+    console.log(branch);
+  });
+
+  return function () {
+    return _ref2.apply(this, arguments);
+  };
+})());
 
 program.parse(process.argv);
 

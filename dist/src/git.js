@@ -45,6 +45,7 @@ class Git {
       });
       _this2.branchHistories = _this2.storage.get(BRANCH_HISTORY) || {};
       _this2.name = yield _this2.getRepositoryName();
+      console.log("repoName: " + _this2.name);
       if (!_this2.branchHistories[_this2.name]) {
         _this2.branchName = yield _this2.branch();
         _this2.branchHistories[_this2.name] = [_this2.branchName];
