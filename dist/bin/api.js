@@ -36,9 +36,10 @@ program.command("co <branch>").description("切换到某个分支，本地不存
 program.version("0.0.1");
 program.option("-n, --name <name>", "your name", "GK");
 
-program.command("hello").description("hello").action(() => {
-  console.log("test");
-});
+program.command("update").description("更新最新的master").action(_asyncToGenerator(function* () {
+  const branch = yield git.pull();
+  console.log(branch);
+}));
 
 program.parse(process.argv);
 
