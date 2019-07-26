@@ -20,12 +20,20 @@ class Git {
     this.storage = new _storage2.default("git");
   }
 
-  checkIsRepo() {
+  useRaw(args, fn) {
     var _this = this;
 
     return _asyncToGenerator(function* () {
+      return _this.git.raw(args, fn);
+    })();
+  }
+
+  checkIsRepo() {
+    var _this2 = this;
+
+    return _asyncToGenerator(function* () {
       return new Promise(function (resolve, reject) {
-        _this.git.checkIsRepo(function (msg, res) {
+        _this2.git.checkIsRepo(function (msg, res) {
           if (!res) {
             reject();
           }
@@ -36,20 +44,20 @@ class Git {
   }
 
   init() {
-    var _this2 = this;
+    var _this3 = this;
 
     return _asyncToGenerator(function* () {
-      yield _this2.checkIsRepo().catch(function () {
+      yield _this3.checkIsRepo().catch(function () {
         console.error("Current dir is not a git repository!!!");
         process.exit();
       });
-      _this2.branchHistories = _this2.storage.get(BRANCH_HISTORY) || {};
-      _this2.name = yield _this2.getRepositoryName();
-      console.log("repoName: " + _this2.name);
-      if (!_this2.branchHistories[_this2.name]) {
-        _this2.branchName = yield _this2.branch();
-        _this2.branchHistories[_this2.name] = [_this2.branchName];
-        _this2.storage.set(BRANCH_HISTORY, _this2.branchHistories);
+      _this3.branchHistories = _this3.storage.get(BRANCH_HISTORY) || {};
+      _this3.name = yield _this3.getRepositoryName();
+      console.log("repoName: " + _this3.name);
+      if (!_this3.branchHistories[_this3.name]) {
+        _this3.branchName = yield _this3.branch();
+        _this3.branchHistories[_this3.name] = [_this3.branchName];
+        _this3.storage.set(BRANCH_HISTORY, _this3.branchHistories);
       }
       console.log("git init success!");
     })();
@@ -76,11 +84,11 @@ class Git {
   }
 
   push(branch) {
-    var _this3 = this;
+    var _this4 = this;
 
     return _asyncToGenerator(function* () {
       return new Promise(function (resolve, reject) {
-        _this3.git.push("origin", branch, function (msg, result) {
+        _this4.git.push("origin", branch, function (msg, result) {
           msg && reject(msg);
           resolve(result);
         });
@@ -89,11 +97,11 @@ class Git {
   }
 
   diffSummary() {
-    var _this4 = this;
+    var _this5 = this;
 
     return _asyncToGenerator(function* () {
       return new Promise(function (resolve, reject) {
-        _this4.git.diffSummary(function (msg, result) {
+        _this5.git.diffSummary(function (msg, result) {
           msg && reject(msg);
           resolve(result);
         });
@@ -102,11 +110,11 @@ class Git {
   }
 
   branch() {
-    var _this5 = this;
+    var _this6 = this;
 
     return _asyncToGenerator(function* () {
       return new Promise(function (resolve, reject) {
-        _this5.git.branch({}, function (msg, branchInfo) {
+        _this6.git.branch({}, function (msg, branchInfo) {
           msg && reject(msg);
           resolve(branchInfo.current);
         });
@@ -115,11 +123,11 @@ class Git {
   }
 
   localBranches() {
-    var _this6 = this;
+    var _this7 = this;
 
     return _asyncToGenerator(function* () {
       return new Promise(function (resolve, reject) {
-        _this6.git.branchLocal(function (msg, branchInfo) {
+        _this7.git.branchLocal(function (msg, branchInfo) {
           msg && reject(msg);
           resolve(branchInfo);
         });
@@ -128,11 +136,11 @@ class Git {
   }
 
   pull(branch = "master") {
-    var _this7 = this;
+    var _this8 = this;
 
     return _asyncToGenerator(function* () {
       return new Promise(function (resolve, reject) {
-        _this7.git.pull("origin", branch, function (msg, pullInfo) {
+        _this8.git.pull("origin", branch, function (msg, pullInfo) {
           msg && reject(msg);
           resolve(pullInfo);
         });
@@ -141,14 +149,14 @@ class Git {
   }
 
   stash(options = {}) {
-    var _this8 = this;
+    var _this9 = this;
 
     return _asyncToGenerator(function* () {
       return new Promise(function (resolve, reject) {
         const { pop = false } = options;
         const params = [];
         pop && params.push("pop");
-        _this8.git.stash(params, function (msg, res) {
+        _this9.git.stash(params, function (msg, res) {
           msg && reject(msg);
           if (res && res.indexOf("Saved") !== -1) {
             resolve(true);
@@ -160,11 +168,11 @@ class Git {
   }
 
   deleteLocal(branch) {
-    var _this9 = this;
+    var _this10 = this;
 
     return _asyncToGenerator(function* () {
       return new Promise(function (resolve, reject) {
-        _this9.git.deleteLocalBranch(branch, function (msg, result) {
+        _this10.git.deleteLocalBranch(branch, function (msg, result) {
           msg && reject(msg);
           resolve(result);
         });
@@ -173,11 +181,11 @@ class Git {
   }
 
   deleteLocalForce(branch) {
-    var _this10 = this;
+    var _this11 = this;
 
     return _asyncToGenerator(function* () {
       return new Promise(function (resolve, reject) {
-        _this10.git.raw(["branch", "-D", branch], function (msg, result) {
+        _this11.git.raw(["branch", "-D", branch], function (msg, result) {
           msg && reject(msg);
           resolve(result);
         });
@@ -186,19 +194,19 @@ class Git {
   }
 
   checkout(options, branchName) {
-    var _this11 = this;
+    var _this12 = this;
 
     return _asyncToGenerator(function* () {
       return new Promise(function (resolve, reject) {
         if (!options) {
           reject("no params");
         }
-        _this11.git.checkout(options, function (msg, result) {
+        _this12.git.checkout(options, function (msg, result) {
           msg && reject(msg);
           if (branchName) {
             console.log("checkout: " + branchName);
-            _this11.branchName = branchName;
-            _this11.pushBranchHistory(branchName);
+            _this12.branchName = branchName;
+            // this.pushBranchHistory(branchName);
           }
           resolve(result);
         });
@@ -207,11 +215,11 @@ class Git {
   }
 
   fetch(branch, remote = "origin") {
-    var _this12 = this;
+    var _this13 = this;
 
     return _asyncToGenerator(function* () {
       return new Promise(function (resolve, reject) {
-        _this12.git.fetch(remote, branch, function (msg, result) {
+        _this13.git.fetch(remote, branch, function (msg, result) {
           msg && reject(msg);
           resolve(result);
         });
@@ -220,11 +228,11 @@ class Git {
   }
 
   add(options) {
-    var _this13 = this;
+    var _this14 = this;
 
     return _asyncToGenerator(function* () {
       return new Promise(function (resolve, reject) {
-        _this13.git.add(options, function (msg, result) {
+        _this14.git.add(options, function (msg, result) {
           msg && reject(msg);
           resolve(result);
         });
@@ -233,11 +241,11 @@ class Git {
   }
 
   commit(msg) {
-    var _this14 = this;
+    var _this15 = this;
 
     return _asyncToGenerator(function* () {
       return new Promise(function (resolve, reject) {
-        _this14.git.commit(msg, function (msg, result) {
+        _this15.git.commit(msg, function (msg, result) {
           msg && reject(msg);
           resolve(result);
         });
@@ -246,14 +254,14 @@ class Git {
   }
 
   merge(branchName) {
-    var _this15 = this;
+    var _this16 = this;
 
     return _asyncToGenerator(function* () {
       return new Promise(function (resolve, reject) {
         if (!branchName) {
           reject();
         }
-        _this15.git.raw(["merge", branchName], function (msg, result) {
+        _this16.git.raw(["merge", branchName], function (msg, result) {
           msg && reject(msg);
           resolve(result);
         });
@@ -262,11 +270,11 @@ class Git {
   }
 
   getUserName() {
-    var _this16 = this;
+    var _this17 = this;
 
     return _asyncToGenerator(function* () {
       return new Promise(function (resolve, reject) {
-        _this16.git.raw(["config", "user.name"], function (msg, result) {
+        _this17.git.raw(["config", "user.name"], function (msg, result) {
           msg && reject(msg);
           resolve(trim(result));
         });
@@ -275,27 +283,27 @@ class Git {
   }
 
   update() {
-    var _this17 = this;
+    var _this18 = this;
 
     return _asyncToGenerator(function* () {
       return new Promise(function (resolve, reject) {
-        _this17.stash().then(function () {
-          _this17.pull().then(function () {
-            _this17.stash({ pop: true });
+        _this18.stash().then(function () {
+          _this18.pull().then(function () {
+            _this18.stash({ pop: true });
           });
         }).catch(function () {
-          _this17.pull();
+          _this18.pull();
         });
       });
     })();
   }
 
   getRepositoryName() {
-    var _this18 = this;
+    var _this19 = this;
 
     return _asyncToGenerator(function* () {
       return new Promise(function (resolve, reject) {
-        _this18.git.raw(["config", "remote.origin.url"], function (msg, result) {
+        _this19.git.raw(["config", "remote.origin.url"], function (msg, result) {
           msg && reject(msg);
           const pattern = /\/(.+).git/;
           result = pattern.exec(result);
@@ -307,6 +315,8 @@ class Git {
       });
     })();
   }
+
+  getCurrentBranchName() {}
 }
 
 module.exports = Git;
