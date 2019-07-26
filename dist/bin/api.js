@@ -10,6 +10,7 @@ const git = new Git();
 
 const _warn = chalk.keyword("orange");
 const _error = chalk.keyword("red");
+const _success = chalk.keyword("green");
 
 program.command("co <branch>").description("切换到某个分支，本地不存在时会尝试切换到远程分支").action((() => {
   var _ref = _asyncToGenerator(function* (branch) {
@@ -55,11 +56,14 @@ program.command("opush").description("在远程创建分支，并推送本地分
       resolve(branchInfo.current);
     });
     console.log(currentBranchName);
-    git.useRaw(["push", "-u", "origin", currentBranchName], function (msg, result) {
-      console.log(msg);
-      msg && reject(msg);
-      resolve(result);
-    });
+    const result = yield git.push({ "--set-upstream": null }, "origin", currentBranchName);
+    console.log(result);
+    console.log(chalk.green(`分支${currentBranchName}推送成功！`));
+    // git.useRaw(["push", "-u", "origin", currentBranchName], (msg, result) => {
+    //   console.log(msg);
+    //   msg && reject(msg);
+    //   resolve(result);
+    // });
   } catch (e) {
     console.log(e);
     console.log(chalk.red(`分支推送失败`));
