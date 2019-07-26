@@ -44,12 +44,14 @@ program.command("update [branch]").description("更新最新的分支代码，�
   };
 })());
 
+program.command("bname").description("获取当前分支的名称").action(_asyncToGenerator(function* () {
+  const name = yield git.branch();
+  console.log(name);
+}));
+
 program.command("opush").description("在远程创建分支，并推送本地分支到远程").action(_asyncToGenerator(function* () {
   try {
-    const currentBranchName = yield git.branch({}, function (msg, branchInfo) {
-      msg && reject(msg);
-      resolve(branchInfo.current);
-    });
+    const currentBranchName = yield git.branch();
     git.useRaw(["push", "-u", "origin", currentBranchName], function (msg, result) {
       console.log(chalk.green(`分支${currentBranchName}推送成功！`));
     });
